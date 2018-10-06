@@ -58,3 +58,4 @@ receptive_field(model, (3, 256, 256))
 
 ## Related
 Thanks @pytorch-summary
+https://medium.com/mlreview/a-guide-to-receptive-field-arithmetic-for-convolutional-neural-networks-e0f514068807
