@@ -12,7 +12,18 @@ def check_same(stride):
     return stride
 
 def receptive_field(model, input_size, batch_size=-1, device="cuda"):
+    '''
+    :parameter
+    'input_size': tuple of (Channel, Height, Width)
 
+    :return  OrderedDict of `Layername`->OrderedDict of receptive field stats {'j':,'r':,'start':,'conv_stage':,'output_shape':,}
+    'j' for "jump" denotes how many pixels do the receptive fields of spatially neighboring units in the feature tensor
+        do not overlap in one direction.
+        i.e. shift one unit in this feature map == how many pixels shift in the input image in one direction.
+    'r' for "receptive_field" is the spatial range of the receptive field in one direction.
+    'start' denotes the center of the receptive field for the first unit (start) in on direction of the feature tensor.
+        Convention is to use half a pixel as the center for a range. center for `slice(0,5)` is 2.5.
+    '''
     def register_hook(module):
 
         def hook(module, input, output):
@@ -96,6 +107,7 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
     receptive_field["0"]["start"] = 0.5
     receptive_field["0"]["conv_stage"] = True
     receptive_field["0"]["output_shape"] = list(x.size())
+    receptive_field["0"]["output_shape"][0] = batch_size
     hooks = []
 
     # register hook
@@ -131,3 +143,39 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
 
     print("==============================================================================")
     return receptive_field
+
+
+def receptive_field_for_unit(receptive_field_dict, input_shape, layer, unit_position):
+    """Utility function to calculate the receptive field for a specific unit in a layer
+        using the dictionary calculated above
+    :parameter
+        'layer': layer name, should be a key in the result dictionary
+        'unit_position': spatial coordinate of the unit (H, W)
+
+    ```
+    alexnet = models.alexnet()
+    model = alexnet.features.to('cuda')
+    receptive_field_dict = receptive_field(model, (3, 224, 224))
+    receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "8", (6,6))
+    ```
+    Out: [(62.0, 161.0), (62.0, 161.0)]
+    """
+    if layer in receptive_field_dict:
+        rf_stats = receptive_field_dict[layer]
+        assert len(unit_position) == 2
+        feat_map_lim = rf_stats['output_shape'][2:]
+        if np.any([unit_position[idx] < 0 or
+                   unit_position[idx] >= feat_map_lim[idx]
+                   for idx in range(2)]):
+            raise Exception("Unit position outside spatial extent of the feature tensor ((H, W) = (%d, %d)) " % tuple(feat_map_lim))
+        # X, Y = tuple(unit_position)
+        rf_range = [(rf_stats['start'] + idx * rf_stats['j'] - rf_stats['r'] / 2,
+            rf_stats['start'] + idx * rf_stats['j'] + rf_stats['r'] / 2) for idx in unit_position]
+        if len(input_shape) == 2:
+            limit = input_shape
+        else:  # input shape is (channel, H, W)
+            limit = input_shape[1:3]
+        rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(2)]
+        return rf_range
+    else:
+        raise KeyError("Layer name incorrect, or not included in the model.")
