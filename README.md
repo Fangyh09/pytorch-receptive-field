@@ -1,6 +1,5 @@
 # pytorch-receptive-field
-
-## 
+ 
 [![Build Status](https://travis-ci.com/Fangyh09/pytorch-receptive-field.svg?branch=master)](https://travis-ci.com/Fangyh09/pytorch-receptive-field)
 
 Compute CNN receptive field size in pytorch
