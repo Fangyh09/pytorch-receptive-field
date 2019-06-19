@@ -13,6 +13,13 @@ from torch_receptive_field import receptive_field
 receptive_field(model, input_size=(channels, H, W))
 ```
 
+Or
+```python
+from torch_receptive_field import receptive_field
+dict = receptive_field(model, input_size=(channels, H, W))
+receptive_field_for_unit(receptive_field_dict, "2", (2,2))
+```
+
 ## Example
 ```python
 import torch
@@ -40,7 +47,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # PyTorch 
 model = Net().to(device)
 
 receptive_field_dict = receptive_field(model, (3, 256, 256))
-receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "2", (2,2))
+receptive_field_for_unit(receptive_field_dict, "2", (2,2))
 ```
 ```
 ------------------------------------------------------------------------------
@@ -52,6 +59,8 @@ receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "2", (2,2))
         3             [128, 128]        0.5        2.0             7.0
         4               [64, 64]        0.5        4.0            11.0
 ==============================================================================
+Receptive field size for layer 2, unit_position (1, 1),  is
+ [(0, 6.0), (0, 6.0)]
 ```
 
 ## More
@@ -65,7 +74,7 @@ receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "2", (2,2))
 ## Todo
 - [x] Add Travis CI 
   
-  
+
 ## Related
 Thanks @pytorch-summary
 

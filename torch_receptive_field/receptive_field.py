@@ -142,10 +142,12 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
         print(line_new)
 
     print("==============================================================================")
+    # add input_shape
+    receptive_field["input_size"] = input_size
     return receptive_field
 
 
-def receptive_field_for_unit(receptive_field_dict, input_shape, layer, unit_position):
+def receptive_field_for_unit(receptive_field_dict, layer, unit_position):
     """Utility function to calculate the receptive field for a specific unit in a layer
         using the dictionary calculated above
     :parameter
@@ -156,10 +158,11 @@ def receptive_field_for_unit(receptive_field_dict, input_shape, layer, unit_posi
     alexnet = models.alexnet()
     model = alexnet.features.to('cuda')
     receptive_field_dict = receptive_field(model, (3, 224, 224))
-    receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "8", (6,6))
+    receptive_field_for_unit(receptive_field_dict, "8", (6,6))
     ```
     Out: [(62.0, 161.0), (62.0, 161.0)]
     """
+    input_shape = receptive_field_dict["input_size"]
     if layer in receptive_field_dict:
         rf_stats = receptive_field_dict[layer]
         assert len(unit_position) == 2
