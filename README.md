@@ -61,11 +61,13 @@ receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "2", (2,2))
 
 `receptive_field` is the field size of the item in the map grid.
 
+
+## Todo
+- [x] Add Travis CI 
+  
+  
 ## Related
 Thanks @pytorch-summary
 
 https://medium.com/mlreview/a-guide-to-receptive-field-arithmetic-for-convolutional-neural-networks-e0f514068807
 
-
-## Todo
-- [ ] Add Travis CI 
