@@ -1,0 +1,6 @@
+language: python
+before_script: 
+  - pip install torch==0.4.0 torchvision
+  - pip install numpy
+script: 
+  - python main.py
