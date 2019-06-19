@@ -176,6 +176,7 @@ def receptive_field_for_unit(receptive_field_dict, input_shape, layer, unit_posi
         else:  # input shape is (channel, H, W)
             limit = input_shape[1:3]
         rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(2)]
+        print("Receptive field size for layer %s, unit_position %s,  is \n %s" % (layer, unit_position, rf_range))
         return rf_range
     else:
         raise KeyError("Layer name incorrect, or not included in the model.")

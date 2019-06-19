@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_receptive_field import receptive_field
+from torch_receptive_field import receptive_field, receptive_field_for_unit
 
 class Net(nn.Module):
     def __init__(self):
@@ -22,4 +22,5 @@ class Net(nn.Module):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # PyTorch v0.4.0
 model = Net().to(device)
 
-receptive_field(model, (3, 256, 256))
+receptive_field_dict = receptive_field(model, (3, 256, 256))
+receptive_field_for_unit(receptive_field_dict, (3, 224, 224), "2", (1,1))
