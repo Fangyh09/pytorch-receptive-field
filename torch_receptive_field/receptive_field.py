@@ -50,7 +50,7 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
                     kernel_size, stride, padding = map(check_same, [kernel_size, stride, padding])
                     receptive_field[m_key]["j"] = p_j * stride
                     receptive_field[m_key]["r"] = p_r + (kernel_size - 1) * p_j
-                    receptive_field[m_key]["start"] = p_start + (int((kernel_size - 1) / 2) - padding) * p_j
+                    receptive_field[m_key]["start"] = p_start + ((kernel_size - 1) / 2 - padding) * p_j
                 elif class_name == "BatchNorm2d" or class_name == "ReLU" or class_name == "Bottleneck":
                     receptive_field[m_key]["j"] = p_j
                     receptive_field[m_key]["r"] = p_r
