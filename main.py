@@ -10,12 +10,14 @@ class Net(nn.Module):
         self.bn = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        self.avgpool = nn.AvgPool2d(kernel_size=3, stride=2, padding=1)
 
     def forward(self, x):
         y = self.conv(x)
         y = self.bn(y)
         y = self.relu(y)
         y = self.maxpool(y)
+        y = self.avgpool(y)
         return y
 
 
