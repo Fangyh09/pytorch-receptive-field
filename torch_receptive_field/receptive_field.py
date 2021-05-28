@@ -15,8 +15,6 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
     '''
     :parameter
     'input_size': tuple of (Channel, Height, Width)
-
-
     :return  OrderedDict of `Layername`->OrderedDict of receptive field stats {'j':,'r':,'start':,'conv_stage':,'output_shape':,}
     'j' for "jump" denotes how many pixels do the receptive fields of spatially neighboring units in the feature tensor
         do not overlap in one direction.
@@ -156,7 +154,6 @@ def receptive_field_for_unit(receptive_field_dict, layer, unit_position):
     :parameter
         'layer': layer name, should be a key in the result dictionary
         'unit_position': spatial coordinate of the unit (H, W)
-
     ```
     alexnet = models.alexnet()
     model = alexnet.features.to('cuda')
@@ -168,20 +165,32 @@ def receptive_field_for_unit(receptive_field_dict, layer, unit_position):
     input_shape = receptive_field_dict["input_size"]
     if layer in receptive_field_dict:
         rf_stats = receptive_field_dict[layer]
-        assert len(unit_position) == 2
+        assert len(unit_position) == 2 or len(unit_position) == 3
         feat_map_lim = rf_stats['output_shape'][2:]
         if np.any([unit_position[idx] < 0 or
                    unit_position[idx] >= feat_map_lim[idx]
-                   for idx in range(2)]):
-            raise Exception("Unit position outside spatial extent of the feature tensor ((H, W) = (%d, %d)) " % tuple(feat_map_lim))
+                   for idx in range(len(unit_position))]):
+            if len(unit_position) == 2:
+                raise Exception("Unit position outside spatial extent of the feature tensor ((H, W) = (%d, %d)) " % tuple(feat_map_lim))
+            else:
+                raise Exception("Unit position outside spatial extent of the feature tensor ((D, H, W) = (%d, %d, %d)) " % tuple(feat_map_lim))
         # X, Y = tuple(unit_position)
         rf_range = [(rf_stats['start'] + idx * rf_stats['j'] - rf_stats['r'] / 2,
             rf_stats['start'] + idx * rf_stats['j'] + rf_stats['r'] / 2) for idx in unit_position]
-        if len(input_shape) == 2:
-            limit = input_shape
-        else:  # input shape is (channel, H, W)
-            limit = input_shape[1:3]
-        rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(2)]
+        import pdb; pdb.set_trace()
+        if len(unit_position) == 2:
+            if len(input_shape) == 2:
+                limit = input_shape
+            else:  # input shape is (channel, H, W)
+                limit = input_shape[1:3]
+            rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(2)]
+        else:
+            if len(input_shape) == 3:
+                limit = input_shape
+            else:  # input shape is (channel, D, H, W)
+                limit = input_shape[1:4]
+            rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(3)]
+
         print("Receptive field size for layer %s, unit_position %s,  is \n %s" % (layer, unit_position, rf_range))
         return rf_range
     else:
