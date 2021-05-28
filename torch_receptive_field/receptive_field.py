@@ -7,8 +7,8 @@ import numpy as np
 
 def check_same(stride):
     if isinstance(stride, (list, tuple)):
-        assert len(stride) == 2 and stride[0] == stride[1]
-        stride = stride[0]
+            assert (len(stride) == 2 and stride[0] == stride[1]) or (len(stride) == 3 and stride[0] == stride[1] and stride[1] == stride[2])
+            stride = stride[0]
     return stride
 
 def receptive_field(model, input_size, batch_size=-1, device="cuda"):
