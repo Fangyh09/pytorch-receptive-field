@@ -21,10 +21,10 @@ class Net(nn.Module):
 class Net3D(nn.Module):
     def __init__(self):
         super(Net3D, self).__init__()
-        self.conv = nn.Conv3d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
-        self.bn = nn.BatchNorm3d(64)
+        self.conv = nn.Conv3d(3, 6, kernel_size=3, stride=1, padding=3, bias=False)
+        self.bn = nn.BatchNorm3d(6)
         self.relu = nn.ReLU(inplace=True)
-        self.maxpool = nn.MaxPool3d(kernel_size=3, stride=2, padding=1)
+        self.maxpool = nn.MaxPool3d(kernel_size=2, stride=2, padding=1)
 
     def forward(self, x):
         y = self.conv(x)
@@ -40,5 +40,5 @@ receptive_field_dict = receptive_field(model, (3, 256, 256))
 receptive_field_for_unit(receptive_field_dict, "2", (1,1))
 
 model = Net3D().to(device)
-receptive_field_dict = receptive_field(model, (3, 256, 256, 256))
+receptive_field_dict = receptive_field(model, (3, 16, 16, 16))
 receptive_field_for_unit(receptive_field_dict, "2", (1,1))
