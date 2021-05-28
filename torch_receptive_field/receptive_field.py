@@ -177,7 +177,6 @@ def receptive_field_for_unit(receptive_field_dict, layer, unit_position):
         # X, Y = tuple(unit_position)
         rf_range = [(rf_stats['start'] + idx * rf_stats['j'] - rf_stats['r'] / 2,
             rf_stats['start'] + idx * rf_stats['j'] + rf_stats['r'] / 2) for idx in unit_position]
-        import pdb; pdb.set_trace()
         if len(unit_position) == 2:
             if len(input_shape) == 2:
                 limit = input_shape
