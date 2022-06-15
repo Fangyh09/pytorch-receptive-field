@@ -2,7 +2,7 @@
  
 [![Build Status](https://travis-ci.com/Fangyh09/pytorch-receptive-field.svg?branch=master)](https://travis-ci.com/Fangyh09/pytorch-receptive-field)
 
-Compute CNN receptive field size in pytorch
+Compute CNN receptive field size in pytorch. Support both 2D CNN and 3D CNN.
 
 
 ## Usage
