@@ -5,6 +5,18 @@
 Compute CNN receptive field size in pytorch. Support both 2D CNN and 3D CNN.
 
 
+## Create 2D visualization gif
+```python
+from torch_receptive_field import receptive_field
+from torch_receptive_field import receptive_field_visualization_2d
+
+receptive_field_dict = receptive_field(model, (3, 256, 256))
+image_path = "./examples/example.jpg"
+output_path_without_extension = "./examples/example_receptive_field_2d"
+receptive_field_visualization_2d(receptive_field_dict, image_path, output_path_without_extension)
+```
+<img src="./examples/example_receptive_field_2d.gif" width="299" height="224" />
+
 ## Usage
 `git clone https://github.com/Fangyh09/pytorch-receptive-field.git`
 
@@ -71,19 +83,6 @@ Receptive field size for layer 2, unit_position (1, 1),  is
 `jump` is the distance of the adjacent item in the map grid.
 
 `receptive_field` is the field size of the item in the map grid.
-
-
-## Create 2D visualization gif
-```python
-from torch_receptive_field import receptive_field
-from torch_receptive_field import receptive_field_visualization_2d
-
-receptive_field_dict = receptive_field(model, (3, 256, 256))
-image_path = "./examples/example.jpg"
-output_path_without_extension = "./examples/example_receptive_field_2d"
-receptive_field_visualization_2d(receptive_field_dict, image_path, output_path_without_extension)
-```
-<img src="./examples/example_receptive_field_2d.gif" width="299" height="224" />
 
 
 ## Example 3D CNN
