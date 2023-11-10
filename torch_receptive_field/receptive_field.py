@@ -1,6 +1,10 @@
 import torch
 import torch.nn as nn
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 from torch.autograd import Variable
+from matplotlib.animation import FuncAnimation
 
 from collections import OrderedDict
 import numpy as np
@@ -200,3 +204,50 @@ def receptive_field_for_unit(receptive_field_dict, layer, unit_position):
         return rf_range
     else:
         raise KeyError("Layer name incorrect, or not included in the model.")
+
+
+def read_image(image):
+    if isinstance(image, np.ndarray):
+        return image
+    elif isinstance(image, str):
+        try:
+            return cv2.imread(image)
+        except Exception as e:
+            raise ValueError(f"Error reading image: {e}")
+    else:
+        raise ValueError("Unsupported image type. Supported types: numpy array, file path")
+
+
+def receptive_field_visualization_2d(receptive_field_dict, image, save_name="receptive_field_visualization_2d"):
+    ordered_key_list = list(receptive_field_dict.keys())[:-1]
+    image_size = receptive_field_dict["input_size"][1]
+    image = read_image(image)
+    image = cv2.resize(image, (image_size, image_size))
+    center_x, center_y = image.shape[1] // 2, image.shape[0] // 2
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray_image = (gray_image * 0.5).astype(np.uint8)
+    fig, ax = plt.subplots()
+
+    def update_frame(frame_number):
+        layer = ordered_key_list[frame_number]
+        rf_size = int(receptive_field_dict[layer]["r"])
+        image_with_rf = image.copy()
+        top_left = (center_x - rf_size // 2, center_y - rf_size // 2)
+        bottom_right = (center_x + rf_size // 2, center_y + rf_size // 2)
+
+        # Set the pixels outside of the receptive field to grayscale
+        if top_left[1] > 0:
+            image_with_rf[:int(top_left[1]), :] = cv2.cvtColor(gray_image[:int(top_left[1]), :], cv2.COLOR_GRAY2BGR)
+        if bottom_right[1] < image.shape[0]:
+            image_with_rf[int(bottom_right[1]):, :] = cv2.cvtColor(gray_image[int(bottom_right[1]):, :], cv2.COLOR_GRAY2BGR)
+        if top_left[0] > 0:
+            image_with_rf[:, :int(top_left[0])] = cv2.cvtColor(gray_image[:, :int(top_left[0])], cv2.COLOR_GRAY2BGR)
+        if bottom_right[0] < image.shape[1]:
+            image_with_rf[:, int(bottom_right[0]):] = cv2.cvtColor(gray_image[:, int(bottom_right[0]):], cv2.COLOR_GRAY2BGR)
+
+        ax.clear()
+        ax.imshow(cv2.cvtColor(image_with_rf, cv2.COLOR_BGR2RGB))
+        ax.set_title(f"Layer {layer: <3} | Receptive Field {rf_size: <3}")
+
+    ani = FuncAnimation(fig, update_frame, frames=len(ordered_key_list))
+    ani.save(f'{save_name}.gif', writer='imagemagick', fps=2)
