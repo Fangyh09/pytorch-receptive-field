@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_receptive_field import receptive_field, receptive_field_for_unit
+from torch_receptive_field import receptive_field, receptive_field_for_unit, receptive_field_visualization_2d
 
 class Net(nn.Module):
     def __init__(self):
@@ -40,6 +40,7 @@ model = Net().to(device)
 
 receptive_field_dict = receptive_field(model, (3, 256, 256))
 receptive_field_for_unit(receptive_field_dict, "2", (1,1))
+receptive_field_visualization_2d(receptive_field_dict, "./examples/example.jpg", "example_receptive_field_2d")
 
 model = Net3D().to(device)
 receptive_field_dict = receptive_field(model, (3, 16, 16, 16))
