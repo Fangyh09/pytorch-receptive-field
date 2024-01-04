@@ -61,7 +61,7 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
                     receptive_field[m_key]["j"] = p_j * stride
                     receptive_field[m_key]["r"] = p_r + ((kernel_size - 1) * dilation) * p_j
                     receptive_field[m_key]["start"] = p_start + ((kernel_size - 1) / 2 - padding) * p_j
-                elif class_name == "BatchNorm2d" or class_name == "ReLU" or class_name == "Bottleneck" or class_name == "BatchNorm3d":
+                elif class_name == "BatchNorm2d" or class_name == "ReLU" or class_name == "LeakyReLU" or class_name == "Bottleneck" or class_name == "BatchNorm3d":
                     receptive_field[m_key]["j"] = p_j
                     receptive_field[m_key]["r"] = p_r
                     receptive_field[m_key]["start"] = p_start
