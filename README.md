@@ -33,7 +33,7 @@ dict = receptive_field(model, input_size=(channels, H, W))
 receptive_field_for_unit(receptive_field_dict, "2", (2,2))
 ```
 
-## Example
+## Example 2D CNN
 ```python
 import torch
 import torch.nn as nn
@@ -78,7 +78,7 @@ Receptive field size for layer 2, unit_position (1, 1),  is
  [(0, 6.0), (0, 6.0)]
 ```
 
-## More
+### More
 `start` is the center of first item in the map grid .
 
 `jump` is the distance of the adjacent item in the map grid.
@@ -127,11 +127,6 @@ receptive_field_for_unit(receptive_field_dict, "2", (1,1,1))
 Receptive field size for layer 2, unit_position (1, 1, 1),  is 
  [(0, 3.0), (0, 3.0), (0, 3.0)]
 ```
-
-
-## Todo
-- [x] Add Travis CI 
-  
 
 ## Related
 Thanks @pytorch-summary
