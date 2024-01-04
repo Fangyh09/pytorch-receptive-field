@@ -18,7 +18,7 @@ receptive_field_visualization_2d(receptive_field_dict, image_path, output_path_w
 <img src="./examples/example_receptive_field_2d.gif" width="299" height="224" />
 
 ## Usage
-`git clone https://github.com/Fangyh09/pytorch-receptive-field.git`
+`pip install git+ssh://git@github.com/Fangyh09/pytorch-receptive-field.git`
 
 ```python
 from torch_receptive_field import receptive_field
