@@ -7,6 +7,7 @@ Compute CNN receptive field size in pytorch. Support both 2D CNN and 3D CNN.
 
 ## Create 2D visualization gif
 ```python
+# pip install git+ssh://git@github.com/Fangyh09/pytorch-receptive-field.git
 from torch_receptive_field import receptive_field
 from torch_receptive_field import receptive_field_visualization_2d
 
