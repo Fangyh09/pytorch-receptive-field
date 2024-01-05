@@ -5,15 +5,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torch.autograd import Variable
 from matplotlib.animation import FuncAnimation
-
 from collections import OrderedDict
-import numpy as np
+
 
 def check_same(stride):
     if isinstance(stride, (list, tuple)):
             assert (len(stride) == 2 and stride[0] == stride[1]) or (len(stride) == 3 and stride[0] == stride[1] and stride[1] == stride[2])
             stride = stride[0]
     return stride
+
 
 def receptive_field(model, input_size, batch_size=-1, device="cuda"):
     '''
@@ -135,9 +135,6 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
     line_new = "{:>20}  {:>10} {:>10} {:>10} {:>15} ".format("Layer (type)", "map size", "start", "jump", "receptive_field")
     print(line_new)
     print("==============================================================================")
-    total_params = 0
-    total_output = 0
-    trainable_params = 0
     for layer in receptive_field:
         # input_shape, output_shape, trainable, nb_params
         assert "start" in receptive_field[layer], layer
