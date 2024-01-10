@@ -1,6 +1,10 @@
 import torch
 import torch.nn as nn
-import cv2
+try:
+    import cv2
+    cv2_available = True
+except ImportError:
+    cv2_available = False
 import numpy as np
 import matplotlib.pyplot as plt
 from torch.autograd import Variable
@@ -207,6 +211,8 @@ def read_image(image):
     if isinstance(image, np.ndarray):
         return image
     elif isinstance(image, str):
+        if not cv2_available:
+            raise ValueError(f"Image loading requires the cv2 module.")
         try:
             return cv2.imread(image)
         except Exception as e:
@@ -216,6 +222,9 @@ def read_image(image):
 
 
 def receptive_field_visualization_2d(receptive_field_dict, image, save_name="receptive_field_visualization_2d"):
+    if not cv2_available:
+        raise ValueError(f"Visualization requires the cv2 module.")
+    
     ordered_key_list = list(receptive_field_dict.keys())[:-1]
     image_size = receptive_field_dict["input_size"][1]
     image = read_image(image)
