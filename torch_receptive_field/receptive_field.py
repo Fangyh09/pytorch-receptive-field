@@ -28,6 +28,10 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
         Convention is to use half a pixel as the center for a range. center for `slice(0,5)` is 2.5.
     '''
     def register_hook(module):
+        pointwise_operations = ['ReLU', 'LeakyReLU',
+                                'ELU', 'Hardshrink', 'Hardsigmoid', 'Hardtanh', 'LogSigmoid', 'PReLU',
+                                'ReLU6', 'RReLU', 'SELU', 'CELU', 'GELU', 'Sigmoid', 'SiLU', 'Mish',
+                                'Softplus', 'Softshrink', 'Softsign', 'Tanh', 'Tanhshrink', 'Threshold', 'GLU']
 
         def hook(module, input, output):
             class_name = str(module.__class__).split(".")[-1].split("'")[0]
@@ -61,7 +65,7 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
                     receptive_field[m_key]["j"] = p_j * stride
                     receptive_field[m_key]["r"] = p_r + ((kernel_size - 1) * dilation) * p_j
                     receptive_field[m_key]["start"] = p_start + ((kernel_size - 1) / 2 - padding) * p_j
-                elif class_name == "BatchNorm2d" or class_name == "ReLU" or class_name == "LeakyReLU" or class_name == "Bottleneck" or class_name == "BatchNorm3d":
+                elif class_name in pointwise_operations or class_name == "BatchNorm2d" or class_name == "Bottleneck" or class_name == "BatchNorm3d":
                     receptive_field[m_key]["j"] = p_j
                     receptive_field[m_key]["r"] = p_r
                     receptive_field[m_key]["start"] = p_start
