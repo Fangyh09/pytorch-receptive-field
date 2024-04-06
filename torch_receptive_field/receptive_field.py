@@ -197,13 +197,13 @@ def receptive_field_for_unit(receptive_field_dict, layer, unit_position):
                 limit = input_shape
             else:  # input shape is (channel, H, W)
                 limit = input_shape[1:3]
-            rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(2)]
+            rf_range = [(max(0, rf_range[axis][0]), min(limit[axis] - 1, rf_range[axis][1])) for axis in range(2)]
         else:
             if len(input_shape) == 3:
                 limit = input_shape
             else:  # input shape is (channel, D, H, W)
                 limit = input_shape[1:4]
-            rf_range = [(max(0, rf_range[axis][0]), min(limit[axis], rf_range[axis][1])) for axis in range(3)]
+            rf_range = [(max(0, rf_range[axis][0]), min(limit[axis] - 1, rf_range[axis][1])) for axis in range(3)]
 
         print("Receptive field size for layer %s, unit_position %s,  is \n %s" % (layer, unit_position, rf_range))
         return rf_range
