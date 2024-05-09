@@ -79,7 +79,7 @@ def receptive_field(model, input_size, batch_size=-1, device="cuda"):
                     receptive_field[m_key]["r"] = 0
                     receptive_field[m_key]["start"] = 0
                 else:
-                    raise ValueError("module {} not ok".format(class_name))
+                    raise ValueError("module {} not supported yet".format(class_name))
                     pass
             receptive_field[m_key]["input_shape"] = list(input[0].size()) # only one
             receptive_field[m_key]["input_shape"][0] = batch_size
